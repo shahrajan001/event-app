@@ -10,12 +10,21 @@ const addEvent = async (req, res) => {
         ...req.body,
         creator: req.user._id,
     });
+
+    //-------------------------time conversion------------------------
     const temp = new Date( event.time * 1000);
     event.time = temp.toLocaleString()
-
-    console.log(Date.now())
     await event.save();
-    console.log(event)
+
+    const temp1 = new Date.now()
+    
+
+
+
+
+
+
+    //-----------------------logic--------------------------
     try {
         await event.save();
         res.status(201).send("Event added");
@@ -25,20 +34,17 @@ const addEvent = async (req, res) => {
 }
 
 const listEvents = async (req, res) => {
-    console.log('into list Event router')
-    try {
-            // console.log(req.user)
-            await req.user.populate({
-                path: "events",
-                });
+    try {   
+            await req.user.populate("events")
                 console.log('hmmmmmm')
             res.status(200).send(req.user.events);
-        } catch {
-            res.status(500).send("Error getiing events");
+        } catch(e) {
+            res.status(500).send(e);
         }
     }
 
 const updateEvent = async (req, res) => {
+    console.log('into update Event router')
     const updates = Object.keys(req.body);
     const allowedUpdates = ["title", "time"];
     const isValidOperation = updates.every((update) =>
@@ -48,29 +54,31 @@ const updateEvent = async (req, res) => {
         return res.status(400).send({ error: "invalid update" });
     }
 
-    const title = req.body.title
-
+    const titlet = req.body.title
+   
     try {
-        const task = await Task.findOne({ title});
+        const event = await Event.findOne({ title:titlet,creator:req.user._id});
+        console.log(event)
+        updates.forEach((update) => (event[update] = req.body[update]));
+        await event.save();
 
-        updates.forEach((update) => (task[update] = req.body[update]));
-        await task.save();
-        if (!task) {
-            return res.status(404).send("Task not found");
+        console.log('into update Event router-2')
+        if (!event) {
+            return res.status(404).send("Event not found");
         }
-        res.send(task);
+        res.send(event);
     } catch (e) {
         res.status(400).send("Error updating task");
     }
-
 }
 
 const deleteEvent = async (req, res) => {
+    console.log('into delete Event router')
     const title = req.body.title
     try {
-        const task = await Task.findOneAndDelete({title});
-        if (!task) {
-            res.status(404).send("Task not found");
+        const event = await Event.findOneAndDelete({title,creator:req.user._id});
+        if (!event) {
+            res.status(404).send("Event not found");
         }
         res.send();
     } catch (e) {

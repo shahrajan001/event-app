@@ -11,7 +11,7 @@ const eventSchema = new mongoose.Schema(
         },
         time: {
             type:String,
-            // required: true,
+            required: true,
             // validate(value) {
             //     if (Date.value < Date.now) {
             //         throw new Error("You cannot set an even for the past");
@@ -47,6 +47,6 @@ eventSchema.pre("save", async function (next) {
     next();
 });
 
-const Events = mongoose.model("Tasks", eventSchema);
+const Events = mongoose.model("Events", eventSchema);
 
 module.exports = Events;

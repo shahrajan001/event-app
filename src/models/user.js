@@ -45,7 +45,7 @@ const userSchema = new mongoose.Schema(
 );
 //----------addin virtual attriutes-----------
 userSchema.virtual("events", {
-    ref: "Events",
+    ref: "Events",  
     localField: "_id",
     foreignField: "creator",
 });
