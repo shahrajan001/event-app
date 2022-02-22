@@ -22,6 +22,15 @@ const deleteUser = (email, name) => {
     });
 };
 
+const inviteUser = (event) => {
+    sgMail.send({
+        to: event.emailList,
+        from: "shahrajan7621@gmail.com",
+        subject: `Invitation for ${event.title}`,
+        text: `Greetings for the day! You have been invited to a meeting has been for ${event.title} scheduled at ${event.time}, Please respond to yes or no. We will remind you again % minutes before ${event.time}`,
+    });
+};
+
 const remindUser = (emailList) => {
     sgMail.send({
         to: emailList,
@@ -34,6 +43,7 @@ const remindUser = (emailList) => {
 module.exports = {
     welcomeUser,
     deleteUser,
-    remindUser
+    inviteUser,
+    remindUser,
 };
 

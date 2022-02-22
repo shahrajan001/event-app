@@ -1,8 +1,7 @@
 const express = require("express");
-const router = new express.Router();
-const auth = require("../middleware/auth");
 
 const Event = require("../models/event");
+const emails = require("../email/account");
 
 const addEvent = async (req, res) => {
     console.log("into add event router")
@@ -11,26 +10,26 @@ const addEvent = async (req, res) => {
         creator: req.user._id,
     });
 
-    //-------------------------time conversion------------------------
-    const temp = new Date( event.time * 1000);
-    event.time = temp.toLocaleString()
-    await event.save();
+    // //-------------------------time conversion------------------------
+    // const temp = new Date( event.time * 1000);
+    // event.time = temp.toLocaleString()
+    // await event.save();
 
-    const temp1 = new Date.now()
-    
-
-
-
-
-
-
+    // const temp1 = new Date.now()
+    // event.time = temp.
     //-----------------------logic--------------------------
     try {
         await event.save();
         res.status(201).send("Event added");
+        emails.inviteUser(event);
+        // add emails.remindUser as well
+
+
+
     } catch (e) {
-        res.status(400).send("Failed to create Event");
+        res.status(400).send(e);
     }
+    
 }
 
 const listEvents = async (req, res) => {

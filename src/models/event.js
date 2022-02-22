@@ -6,17 +6,19 @@ const eventSchema = new mongoose.Schema(
         title: {
             type: String,
             required:true,
-            unique: true,
+            // unique: true,
             trim: true,
         },
         time: {
-            type:String,
+            type:Date,
             required: true,
-            // validate(value) {
-            //     if (Date.value < Date.now) {
-            //         throw new Error("You cannot set an even for the past");
-            //     }
-            // },
+            // default: Date.now()+5,
+            // unique:true
+            validate(value) {
+                if (value < Date.now()) {
+                    throw new Error("You cannot set an even for the past");
+                }
+            },
         },
         creator: {
             type: mongoose.Schema.Types.ObjectId,
@@ -25,14 +27,13 @@ const eventSchema = new mongoose.Schema(
         },
         emailList: [
             {
-                email: {
-                    type: String,
-                    // required: true,
-                    validate(value) {
-                        if (!validator.isEmail(value)) {
-                            throw new Error("Entered email is invalid");
-                        }
-                    },
+                type: String,
+                unique:true,
+                // required: true,
+                validate(value) {
+                    if (!validator.isEmail(value)) {
+                        throw new Error("Entered email is invalid");
+                    }
                 },
             },
         ],
