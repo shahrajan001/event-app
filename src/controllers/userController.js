@@ -6,9 +6,7 @@ const User = require("../models/user");
 const emails = require("../email/account");
 
 const createUser = async (req, res) => {
-    console.log("into createUser router");
     const user = new User(req.body);
-    console.log(req.body)
     try {
         await user.save();
         const token = await user.generateAuthToken();
@@ -20,7 +18,6 @@ const createUser = async (req, res) => {
 }
 
 const loginUser = async (req, res) => {
-    console.log("into logging router");
     try {
         const user = await User.findByCredentials(
             req.body.email,
@@ -34,7 +31,6 @@ const loginUser = async (req, res) => {
 }
 
 const userDetails = async (req, res) => {
-    console.log("into userDetails router");
     try {
         res.send(req.user);
     } catch (e) {
@@ -43,7 +39,6 @@ const userDetails = async (req, res) => {
 }
 
 const updateUser = async (req, res) => {
-    console.log("into updateUser router");
     const updates = Object.keys(req.body);
     const allowedUpdates = ["name", "email", "password"];
     const isValidOperation = updates.every((update) => {
@@ -66,7 +61,7 @@ const updateUser = async (req, res) => {
 }
 
 const userEvents = async (req, res) => {                //wont be using 20220221 13:18
-    console.log("into userEvents router");
+
 }
 
 const uploadAvatar = async (req, res) => {
@@ -82,7 +77,6 @@ const deleteAvatar = async (req, res) => {
 }
 
 const logout = async (req, res) => {
-    console.log("into logout router");
     try {
         req.user.tokens = req.user.tokens.filter((token) => {
             return token.token !== req.token;
@@ -96,7 +90,7 @@ const logout = async (req, res) => {
 }
 
 const logoutAll = async (req, res) => {
-    console.log("into logoutAll router");
+
     try {
         req.user.tokens = [];
         await req.user.save();
@@ -107,7 +101,6 @@ const logoutAll = async (req, res) => {
 }
 
 const deleteUser = async (req, res) => {
-    console.log("into logoutAll router");
     const _id = req.user._id;
     try {
         const user = await User.findByIdAndDelete(_id);

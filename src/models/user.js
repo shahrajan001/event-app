@@ -49,6 +49,7 @@ userSchema.virtual("events", {
     localField: "_id",
     foreignField: "creator",
 });
+
 //----------hiding data------
 userSchema.methods.toJSON = function () {
     const userObject = this.toObject();

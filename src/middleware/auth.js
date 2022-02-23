@@ -13,8 +13,6 @@ const auth = async (req, res, next) => {
         if (!user || !decoded) {
             throw new Error("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
         }
-        console.log("user:------");
-
         req.token = token;
         req.user = user;
         console.log("authentication token done");

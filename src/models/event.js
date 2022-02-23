@@ -26,16 +26,17 @@ const eventSchema = new mongoose.Schema(
             ref: "User",
         },
         emailList: [
+           {
+                type: mongoose.Schema.Types.ObjectId,
+                ref:"User",
+            }
+
+        ],
+        acceptedList: [
             {
-                type: String,
-                unique:true,
-                // required: true,
-                validate(value) {
-                    if (!validator.isEmail(value)) {
-                        throw new Error("Entered email is invalid");
-                    }
-                },
-            },
+                type: mongoose.Schema.Types.ObjectId,
+                ref:"User"
+            }  
         ],
     },
     {
@@ -44,7 +45,6 @@ const eventSchema = new mongoose.Schema(
 );
 
 eventSchema.pre("save", async function (next) {
-    console.log("just before saving");
     next();
 });
 
