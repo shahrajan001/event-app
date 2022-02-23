@@ -1,6 +1,7 @@
 const express = require("express");
 
 const User = require("../models/user");
+const User1 = require("../models/user");
 const Event = require("../models/event");
 const emails = require("../email/account");
 
@@ -10,31 +11,22 @@ const addEvent = async (req, res) => {
         ...req.body,
         creator: req.user._id,
     });
-
-    // //-------------------------time conversion------------------------
-    // const temp = new Date( event.time * 1000);
-    // event.time = temp.toLocaleString()
-    // await event.save();
-
-    // const temp1 = new Date.now()
-    // event.time = temp.
-    //-----------------------logic--------------------------
-    console.log('1111111111111111111',event)
+    console.log(event)
     try {
         await event.save();
-        const invitations = event.emailList         //convert emailList as objectIDs to actuals email of the users
-        const accepted = event.acceptedList
-        console.log('33333333333',invitations)
-
+        const invitations = event.emailList      
         const invitesToSend = await User.find({_id : invitations})
-        // console.log(invitesToSend)
-        // const inviteEmails = invitesToSend.email
-        
         const inviteEmails = invitesToSend.map(({ email }) => email)
+        
+        const accepted = event.acceptedList
+        const remindersToSend = await User.find({_id : accepted})
+        const remindEmails = remindersToSend.map(({ email }) => email)
         console.log(inviteEmails)
+        console.log(remindEmails)
         emails.inviteUser(event,inviteEmails);
-        res.status(201).send("Event added");
+        emails.remindUser(event,remindEmails);
         // // add emails.remindUser as well
+        res.status(201).send("Event added");
     } catch (e) {
         res.status(400).send(e);
     }
