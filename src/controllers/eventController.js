@@ -21,10 +21,8 @@ const addEvent = async (req, res) => {
         const accepted = event.acceptedList
         const remindersToSend = await User.find({_id : accepted})
         const remindEmails = remindersToSend.map(({ email }) => email)
-        console.log(inviteEmails)
-        console.log(remindEmails)
         emails.inviteUser(event,inviteEmails);
-        emails.remindUser(event,remindEmails);
+        emails.remindUser1(event,remindEmails);
         // // add emails.remindUser as well
         res.status(201).send("Event added");
     } catch (e) {
