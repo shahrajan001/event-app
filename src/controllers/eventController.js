@@ -1,7 +1,6 @@
 const express = require("express");
 
 const User = require("../models/user");
-const User1 = require("../models/user");
 const Event = require("../models/event");
 const emails = require("../email/account");
 
@@ -21,9 +20,11 @@ const addEvent = async (req, res) => {
         const accepted = event.acceptedList
         const remindersToSend = await User.find({_id : accepted})
         const remindEmails = remindersToSend.map(({ email }) => email)
+    
         emails.inviteUser(event,inviteEmails);
-        emails.remindUser1(event,remindEmails);
-        // // add emails.remindUser as well
+        // emails.remindUser(event,remindEmails);
+        emails.remindUser1(remindEmails)
+    
         res.status(201).send("Event added");
     } catch (e) {
         res.status(400).send(e);
